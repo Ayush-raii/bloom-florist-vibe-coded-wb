@@ -220,7 +220,7 @@ export default function ThreeRosesSection({ onSelectOccasion, activeOccasion }) 
       </div>
 
       {/* Subtle Scroll Cue at Bottom */}
-      <div className="relative z-10 mt-12 text-center text-xs uppercase tracking-[0.2em] text-[#635E5B] flex items-center gap-2">
+      <div className="relative z-10 mt-12 text-center text-xs uppercase tracking-[0.2em] text-[#635E5B] flex items-center justify-center gap-2">
         <span>Click any rose to enter its boutique atelier</span>
       </div>
     </section>

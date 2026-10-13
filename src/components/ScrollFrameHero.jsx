@@ -102,15 +102,35 @@ export default function ScrollFrameHero({ onExploreOccasions, onSelectOccasion }
     ctx.fillStyle = '#080809';
     ctx.fillRect(0, 0, displayWidth, displayHeight);
 
-    // Calculate aspect ratio for full-screen cover (fills screen edge-to-edge, zero black bars)
+    // Calculate aspect ratio for canvas drawing
     const imgWidth = img.naturalWidth || 1280;
     const imgHeight = img.naturalHeight || 720;
     
-    const scale = Math.max(displayWidth / imgWidth, displayHeight / imgHeight);
-    const drawW = imgWidth * scale;
-    const drawH = imgHeight * scale;
-    const drawX = (displayWidth - drawW) / 2;
-    const drawY = (displayHeight - drawH) / 2;
+    let drawW, drawH, drawX, drawY;
+
+    // Check if device viewport is in portrait / phone view
+    const isPortrait = displayWidth < displayHeight;
+
+    if (isPortrait) {
+      // In portrait phone view:
+      // In landscape (16:9), the subject (especially the 3 roses in the final frames / last position)
+      // spans horizontally across the frame. If Math.max (cover) is used, the sides are severely clipped,
+      // cutting off the left and right roses and distorting the last position!
+      // By fitting to the screen width with seamless dark luxury background padding,
+      // all 3 roses in the last position (frame 100) are completely and gorgeously visible!
+      const scale = displayWidth / imgWidth;
+      drawW = displayWidth;
+      drawH = imgHeight * scale;
+      drawX = 0;
+      drawY = (displayHeight - drawH) / 2;
+    } else {
+      // Landscape / Desktop view: edge-to-edge cover
+      const scale = Math.max(displayWidth / imgWidth, displayHeight / imgHeight);
+      drawW = imgWidth * scale;
+      drawH = imgHeight * scale;
+      drawX = (displayWidth - drawW) / 2;
+      drawY = (displayHeight - drawH) / 2;
+    }
 
     // High quality smoothing
     ctx.imageSmoothingEnabled = true;
@@ -311,8 +331,8 @@ export default function ScrollFrameHero({ onExploreOccasions, onSelectOccasion }
 
         {/* Minimal Scroll Indicator Floating in Corner */}
         {isLoaded && (
-          <div className="absolute bottom-6 right-6 z-10 hidden md:flex items-center gap-3 px-3 py-1.5 rounded-full bg-[rgba(17,16,20,0.6)] backdrop-blur-md border border-[rgba(255,255,255,0.06)] text-[11px] font-mono text-[#AAA4A0]">
-            <span className="w-2 h-2 rounded-full bg-[#B51F3B] animate-pulse" />
+          <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 z-10 flex items-center gap-2 md:gap-3 px-2.5 py-1 md:px-3 md:py-1.5 rounded-full bg-[rgba(17,16,20,0.7)] backdrop-blur-md border border-[rgba(255,255,255,0.08)] text-[10px] md:text-[11px] font-mono text-[#AAA4A0]">
+            <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-[#B51F3B] animate-pulse" />
             <span>FRAME {String(currentFrameIndex + 1).padStart(3, '0')} / 100</span>
           </div>
         )}

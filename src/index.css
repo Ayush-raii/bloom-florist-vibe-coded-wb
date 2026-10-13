@@ -1617,9 +1617,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border: 1px solid rgba(198, 165, 107, 0.3);
   border-radius: 24px;
   padding: 28px;
-  position: sticky;
-  top: 100px;
+  position: relative;
+  top: auto;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+}
+
+@media (min-width: 1024px) {
+  .builder-live-receipt-card {
+    position: sticky;
+    top: 100px;
+  }
 }
 
 .receipt-header {
