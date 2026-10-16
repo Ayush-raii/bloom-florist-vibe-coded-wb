@@ -105,32 +105,12 @@ export default function ScrollFrameHero({ onExploreOccasions, onSelectOccasion }
     // Calculate aspect ratio for canvas drawing
     const imgWidth = img.naturalWidth || 1280;
     const imgHeight = img.naturalHeight || 720;
-    
-    let drawW, drawH, drawX, drawY;
-
-    // Check if device viewport is in portrait / phone view
-    const isPortrait = displayWidth < displayHeight;
-
-    if (isPortrait) {
-      // In portrait phone view:
-      // In landscape (16:9), the subject (especially the 3 roses in the final frames / last position)
-      // spans horizontally across the frame. If Math.max (cover) is used, the sides are severely clipped,
-      // cutting off the left and right roses and distorting the last position!
-      // By fitting to the screen width with seamless dark luxury background padding,
-      // all 3 roses in the last position (frame 100) are completely and gorgeously visible!
-      const scale = displayWidth / imgWidth;
-      drawW = displayWidth;
-      drawH = imgHeight * scale;
-      drawX = 0;
-      drawY = (displayHeight - drawH) / 2;
-    } else {
-      // Landscape / Desktop view: edge-to-edge cover
-      const scale = Math.max(displayWidth / imgWidth, displayHeight / imgHeight);
-      drawW = imgWidth * scale;
-      drawH = imgHeight * scale;
-      drawX = (displayWidth - drawW) / 2;
-      drawY = (displayHeight - drawH) / 2;
-    }
+    // Full-screen edge-to-edge cover: fills entire phone & desktop viewport seamlessly
+    const scale = Math.max(displayWidth / imgWidth, displayHeight / imgHeight);
+    const drawW = imgWidth * scale;
+    const drawH = imgHeight * scale;
+    const drawX = (displayWidth - drawW) / 2;
+    const drawY = (displayHeight - drawH) / 2;
 
     // High quality smoothing
     ctx.imageSmoothingEnabled = true;
@@ -269,12 +249,12 @@ export default function ScrollFrameHero({ onExploreOccasions, onSelectOccasion }
       {/* Pinned Scroll Container */}
       <div 
         ref={containerRef} 
-        className="relative w-full h-screen overflow-hidden bg-[#080809]"
+        className="relative w-full h-screen h-[100dvh] overflow-hidden bg-[#080809]"
       >
         {/* Full-screen HTML Canvas */}
         <canvas
           ref={canvasRef}
-          className="w-full h-full block object-contain"
+          className="w-full h-full block object-cover"
           style={{ width: '100%', height: '100%', touchAction: 'pan-y' }}
         />
 
